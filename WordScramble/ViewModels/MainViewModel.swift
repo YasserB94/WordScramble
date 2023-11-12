@@ -73,8 +73,9 @@ final class MainViewModel:ObservableObject{
             newWordInput = ""
             return
         }
-        
+
         self.words.insert(word, at: 0)
+        newWordInput = ""
     }
     
     /// Check if a given word is a valid English word using UITextChecker.

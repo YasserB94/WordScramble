@@ -10,35 +10,18 @@ import SwiftUI
 struct MainView: View {
     @ObservedObject private var vm = MainViewModel()
     
-    @State private var newWordIsAdded:Bool = false
-    
     var body: some View {
         NavigationStack{
             VStack{
                 List{
-                    Section{
-                        TextField("Enter your word", text:
-                                    $vm.newWordInput)
-                        .autocorrectionDisabled()
-                    }
-                    Section{
-                        ForEach(vm.words,id:\.self) { word in
-                            HStack {
-                                Image(systemName: "\(word.count).circle")
-                                Spacer()
-                                Text(word)
-                            }
-                        }
-                    }
+                    userInputSection
+                    userGuessedWords
                 }
-                HStack{
-                    Text("Score: \(vm.score)")
-                    Spacer()
-                    Text("High score: \(vm.highScore)")
-                }.padding(.horizontal,40)
-                    .padding(.top)
+                scoreFooter
             }
-            .onSubmit(vm.addWord)
+            .onSubmit{
+                vm.addWord()
+            }
             .onAppear(perform:vm.newGame)
             .navigationTitle(vm.rootWord?.capitalized ?? "Starting game")
             .toolbar {
@@ -46,6 +29,34 @@ struct MainView: View {
             }
             
         }
+    }
+    
+    var userInputSection:some View{
+        Section{
+            TextField("Enter your word", text:
+                        $vm.newWordInput)
+            .autocorrectionDisabled()
+        }
+    }
+    var userGuessedWords:some View{
+        Section{
+            ForEach(vm.words,id:\.self) { word in
+                HStack {
+                    Image(systemName: "\(word.count).circle")
+                    Spacer()
+                    Text(word)
+                }
+            }
+        }
+    }
+    
+    var scoreFooter:some View{
+        HStack{
+            Text("Score: \(vm.score)")
+            Spacer()
+            Text("High score: \(vm.highScore)")
+        }.padding(.horizontal,40)
+            .padding(.top)
     }
 }
 
